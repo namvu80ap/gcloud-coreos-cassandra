@@ -9,7 +9,7 @@ read -p "$*"
 
 ## Fetch GC settings
 # project and zone
-project=api-project-7872450353
+project=$YOUR_PROJECT_ID
 zone=asia-northeast1-c
 # CoreOS release channel
 channel=stable
