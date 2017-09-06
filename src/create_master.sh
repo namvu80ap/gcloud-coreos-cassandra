@@ -31,10 +31,10 @@ gcloud compute instances create $instance_name --project=$project --image=$image
  --can-ip-forward --tags=$instance_name,gc-cluster
 
 # create a static IP for the new instance
-gcloud compute routes create ip-10-220-1-1-$instance_name --project=$project \
+gcloud compute routes create ip-10-222-1-1-$instance_name --project=$project \
          --next-hop-instance $instance_name \
                   --next-hop-instance-zone $zone \
-                           --destination-range 10.220.1.1/32
+                           --destination-range 10.222.1.1/32
 
 echo " "
 echo "Setup has finished !!!"

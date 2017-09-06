@@ -2,16 +2,16 @@
 
 coreos:
   etcd2:
-    name: pro-database-control
-    initial-advertise-peer-urls: http://10.220.1.1:2380
-    initial-cluster-token: pro-database-control_etcd
-    initial-cluster: pro-database-control=http://10.220.1.1:2380
+    name: master
+    initial-advertise-peer-urls: http://10.222.1.1:2380
+    initial-cluster-token: gc-master
+    initial-cluster: master=http://10.222.1.1:2380
     initial-cluster-state: new
-    listen-peer-urls: http://10.220.1.1:2380,http://10.220.1.1:7001
+    listen-peer-urls: http://10.222.1.1:2380,http://10.222.1.1:7001
     listen-client-urls: http://0.0.0.0:2379,http://0.0.0.0:4001
-    advertise-client-urls: http://10.220.1.1:2379,http://10.220.1.1:4001
+    advertise-client-urls: http://10.222.1.1:2379,http://10.222.1.1:4001
   fleet:
-    metadata: "role=services,cpeer=pro-database-control"
+    metadata: role=master
   units:
     - name: 00-ens4v1.network
       runtime: true
@@ -20,19 +20,31 @@ coreos:
         Name=ens4v1
 
         [Network]
-        Address=10.220.1.1/24
+        Address=10.222.1.1/24
     - name: etcd2.service
       command: start
     - name: fleet.service
       command: start
+    - name: flanneld.service
+      command: start
+      drop-ins:
+        - name: 50-network-config.conf
+          content: |
+            [Unit]
+            Requires=etcd2.service
+            [Service]
+            ExecStartPre=/usr/bin/etcdctl set /coreos.com/network/config '{"Network": "10.244.0.0/16", "Backend": {"Type": "vxlan"}}'
     - name: docker.service
       command: start
       drop-ins:
         - name: 50-insecure-registry.conf
           content: |
             [Unit]
+            Requires=flanneld.service
+            After=flanneld.service
             [Service]
             Environment=DOCKER_OPTS='--insecure-registry="0.0.0.0/0"'
+
 write_files:
  - path: /etc/resolv.conf
    permissions: 0644

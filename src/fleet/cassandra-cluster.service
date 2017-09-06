@@ -7,5 +7,8 @@ Requires=docker.service
 TimeoutStartSec=0
 ExecStartPre=-/usr/bin/docker kill cassandra_cluster
 ExecStartPre=-/usr/bin/docker rm cassandra_cluster
-ExecStart=/usr/bin/docker run --name cassandra_cluster -e CASSANDRA_CLUSTERNAME="cluster" -e CASSANDRA_SEEDS=10.244.8.2 cassandra
-ExecStopPost=/usr/bin/docker stop cassandra_cluster
+ExecStart=/usr/bin/docker run --name cassandra_cluster -e CASSANDRA_SEEDS=10.244.53.2 cassandra
+ExecStop=/usr/bin/docker stop cassandra_cluster
+
+[X-Fleet]
+MachineMetadata=role=node
