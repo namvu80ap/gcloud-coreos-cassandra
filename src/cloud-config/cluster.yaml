@@ -1,0 +1,24 @@
+#cloud-config
+
+coreos:
+  etcd2:
+    listen-client-urls: http://0.0.0.0:2379,http://0.0.0.0:4001
+    advertise-client-urls: http://0.0.0.0:2379,http://0.0.0.0:4001
+    initial-cluster: prod-control1=http://10.220.1.1:2380
+    proxy: on
+  fleet:
+    public-ip: $public_ipv4
+    metadata: "role=worker,cpeer=prod-node1,service=node"
+  units:
+    - name: etcd2.service
+      command: start
+    - name: fleet.service
+      command: start
+    - name: docker.service
+      command: start
+      drop-ins:
+        - name: 50-insecure-registry.conf
+          content: |
+            [Unit]
+            [Service]
+            Environment=DOCKER_OPTS='--insecure-registry="0.0.0.0/0"'

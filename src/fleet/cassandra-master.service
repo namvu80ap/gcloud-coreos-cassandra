@@ -1,0 +1,11 @@
+[Unit]
+Description=cassandra-dev
+After=docker.service
+Requires=docker.service
+
+[Service]
+TimeoutStartSec=0
+ExecStartPre=-/usr/bin/docker kill cassandra-dev
+ExecStartPre=-/usr/bin/docker rm cassandra-dev
+ExecStart=/usr/bin/docker run --name cassandra_dev -v /home/core/kobito/data:/var/lib/cassandra -p 9042:9042 -e CASSANDRA_CLUSTERNAME="cluster" -e CASSANDRA_LOCAL_JMX=no cassandra
+ExecStopPost=/usr/bin/docker stop cassandra-dev
