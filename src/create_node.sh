@@ -17,7 +17,7 @@ channel=stable
 # worker_machine_type=f1-micro
 worker_machine_type=g1-small
 
-instance_name=gc-node-1
+instance_name=gc-node-2
 
 # get the latest full image name
 image=$(gcloud compute images list --project=$project | grep -v grep | grep coreos-$channel | awk {'print $1'})
