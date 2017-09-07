@@ -7,14 +7,14 @@
 channel=stable
 
 # SET YOUR PROJECT AND ZONE !!!
-project=$ProjectID
+project=api-project-7872450353
 zone=asia-northeast1-c
 
 # ETCD CONTROL AND NODES MACHINES TYPE
 #
 control_machine_type=n1-standard-1
 #
-worker_machine_type=n1-standard-1
+worker_machine_type=g1-small
 ##
 
 ###

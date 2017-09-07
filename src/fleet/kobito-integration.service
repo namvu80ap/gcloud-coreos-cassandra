@@ -1,0 +1,14 @@
+[Unit]
+Description=kobito-integration
+After=docker.service
+Requires=docker.service
+
+[Service]
+TimeoutStartSec=0
+ExecStartPre=-/usr/bin/docker kill kobito-integration
+ExecStartPre=-/usr/bin/docker rm kobito-integration
+ExecStart=/usr/bin/docker run --name kobito-integration -p 8081:8081 -t namvu80ap/kobito-integration:0.0.1-SNAPSHOT
+ExecStop=/usr/bin/docker stop kobito-integration
+
+[X-Fleet]
+MachineMetadata=role=node
