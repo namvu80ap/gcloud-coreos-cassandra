@@ -8,7 +8,7 @@ channel=stable
 
 # SET YOUR PROJECT AND ZONE !!!
 project=api-project-7872450353
-zone=asia-northeast1-c
+zone=asia-east1-a
 
 # ETCD CONTROL AND NODES MACHINES TYPE
 #
@@ -16,5 +16,5 @@ control_machine_type=n1-standard-1
 #
 worker_machine_type=g1-small
 ##
-
+step_machine_type=f1-micro
 ###

@@ -10,14 +10,14 @@ read -p "$*"
 ## Fetch GC settings
 # project and zone
 project=api-project-7872450353
-zone=asia-northeast1-c
+zone=asia-east1-a
 # CoreOS release channel
 channel=stable
 # worker instance type
 # worker_machine_type=f1-micro
 worker_machine_type=g1-small
 
-instance_name=gc-node-2
+instance_name=gc-node-1
 
 # get the latest full image name
 image=$(gcloud compute images list --project=$project | grep -v grep | grep coreos-$channel | awk {'print $1'})
