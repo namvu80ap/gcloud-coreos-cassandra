@@ -12,11 +12,14 @@ coreos:
     - name: fleet.service
       command: start
     - name: flanneld.service
-     dropins:
-       - name: 50-network-config.conf
-         contents: |
-           [Service]
-           ExecStartPre=/usr/bin/etcdctl set /coreos.com/network/config '{ "Network": "10.1.0.0/16" }'
+      command: start
+      drop-ins:
+        - name: 50-network-config.conf
+          content: |
+            [Unit]
+            Requires=etcd2.service
+            [Service]
+            ExecStartPre=/usr/bin/etcdctl set /coreos.com/network/config '{"Network": "10.244.0.0/16", "Backend": {"Type": "vxlan"}}'
     - name: iptables-restore.service
       enable: true
       command: start
@@ -42,8 +45,10 @@ write_files:
       :OUTPUT ACCEPT [0:0]
       -A INPUT -i lo -j ACCEPT
       -A INPUT -m conntrack --ctstate RELATED,ESTABLISHED -j ACCEPT
-      -A INPUT -p tcp -s 10.140.0.0/25 -m tcp --dport 22 -j ACCEPT
-      -A INPUT -p tcp -s 10.222.1.0/25 -m tcp --dport 22 -j ACCEPT
+      # -A INPUT -p tcp -s 10.140.0.0/25 -m tcp --dport 22 -j ACCEPT
+      # -A INPUT -p tcp -s 10.222.1.0/25 -m tcp --dport 22 -j ACCEPT
+      # -A INPUT -p tcp -s 10.244.0.0/16 -m tcp --dport 22 -j ACCEPT
+      -A INPUT -p tcp -m tcp --dport 22 -j ACCEPT
       -A INPUT -p tcp -m tcp --dport 2379 -j ACCEPT
       -A INPUT -p tcp -m tcp --dport 4001 -j ACCEPT
       -A INPUT -p tcp -m tcp --dport 2380 -j ACCEPT
