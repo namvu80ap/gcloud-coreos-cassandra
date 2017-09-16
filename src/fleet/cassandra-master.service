@@ -7,7 +7,7 @@ Requires=docker.service
 TimeoutStartSec=0
 ExecStartPre=-/usr/bin/docker kill cassandra-dev
 ExecStartPre=-/usr/bin/docker rm cassandra-dev
-ExecStart=/usr/bin/docker run --name cassandra_dev -v /home/core/kobito/data:/var/lib/cassandra -p 9042:9042 cassandra
+ExecStart=/usr/bin/docker run --name cassandra-dev -v /home/core/kobito/data:/var/lib/cassandra -p 9042:9042 cassandra
 ExecStop=/usr/bin/docker stop cassandra-dev
 
 [X-Fleet]
