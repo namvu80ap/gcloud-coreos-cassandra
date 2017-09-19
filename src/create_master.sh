@@ -27,7 +27,8 @@ image=$(gcloud compute images list --project=$project | grep -v grep | grep core
 gcloud compute instances create $instance_name --project=$project --image=$image \
  --image-project=coreos-cloud --boot-disk-size=200 --zone=$zone \
  --machine-type=$control_machine_type --metadata-from-file \
- user-data=cloud-config/master.yaml --can-ip-forward --tags=$instance_name,gc-cluster
+ user-data=cloud-config/master.yaml \
+ --can-ip-forward --tags=$instance_name,gc-cluster
 
 # create a static IP for the new instance
 gcloud compute routes create ip-10-222-1-1-$instance_name --project=$project \
