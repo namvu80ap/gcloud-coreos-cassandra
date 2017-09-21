@@ -7,7 +7,7 @@ coreos:
     initial-cluster: master=http://10.222.1.1:2380
     proxy: on
   fleet:
-      metadata: role=node
+      metadata: role=node2
   flannel:
       interface: $private_ipv4
   units:
@@ -22,6 +22,10 @@ coreos:
               Requires=etcd2.service
               [Service]
               ExecStartPre=/usr/bin/etcdctl set /coreos.com/network/config '{"Network":"10.244.0.0/16", "Backend": {"Type": "vxlan"}}'
+      - name: iptables-restore.service
+        enable: true
+        command: start
+
       - name: docker.service
         command: start
         drop-ins:
@@ -32,3 +36,33 @@ coreos:
               After=flanneld.service
               [Service]
               Environment=DOCKER_OPTS='--insecure-registry="0.0.0.0/0"'
+write_files:
+   - path: /var/lib/iptables/rules-save
+     permissions: 0644
+     owner: 'root:root'
+     content: |
+       *filter
+       :INPUT DROP [0:0]
+       :FORWARD DROP [0:0]
+       :OUTPUT ACCEPT [0:0]
+       -A INPUT -i lo -j ACCEPT
+       -A INPUT -m conntrack --ctstate RELATED,ESTABLISHED -j ACCEPT
+
+       -A INPUT -p tcp -s 10.140.0.0/25 -m tcp --dport 22 -j ACCEPT
+       -A INPUT -p tcp -s 10.222.1.0/25 -m tcp --dport 22 -j ACCEPT
+       -A INPUT -p tcp -s 10.244.0.0/16 -m tcp --dport 22 -j ACCEPT
+
+       -A INPUT -p udp -m udp --dport 8472 -j ACCEPT
+       -A INPUT -p tcp -m tcp --dport 2379 -j ACCEPT
+       -A INPUT -p tcp -m tcp --dport 4001 -j ACCEPT
+       -A INPUT -p tcp -m tcp --dport 2380 -j ACCEPT
+       -A INPUT -p tcp -m tcp --dport 7001 -j ACCEPT
+
+       -A INPUT -p tcp -m tcp --dport 8081 -j ACCEPT
+       -A INPUT -p tcp -m tcp --dport 9042 -j ACCEPT
+
+       -A INPUT -p icmp -m icmp --icmp-type 0 -j ACCEPT
+       -A INPUT -p icmp -m icmp --icmp-type 3 -j ACCEPT
+       -A INPUT -p icmp -m icmp --icmp-type 11 -j ACCEPT
+
+       COMMIT

@@ -11,4 +11,4 @@ ExecStart=/usr/bin/docker run --name kobito-integration -p 8081:8081 -t namvu80a
 ExecStop=/usr/bin/docker stop kobito-integration
 
 [X-Fleet]
-MachineMetadata=role=node
+MachineMetadata=role=master

@@ -82,9 +82,6 @@ write_files:
 
        -A INPUT -p tcp -m tcp --dport 8081 -j ACCEPT
        -A INPUT -p tcp -m tcp --dport 9042 -j ACCEPT
-       -A INPUT -p tcp -m tcp --dport 7000 -j ACCEPT
-       -A INPUT -p tcp -m tcp --dport 9160 -j ACCEPT
-       -A INPUT -p tcp -m tcp --dport 7199 -j ACCEPT
 
        -A INPUT -p icmp -m icmp --icmp-type 0 -j ACCEPT
        -A INPUT -p icmp -m icmp --icmp-type 3 -j ACCEPT
